@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala 1:X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 10px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 35px;
+        }
+
+        .escala-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            padding: 18px;
+            background-color: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .escala-input-container:focus-within {
+            border-color: #4a90e2;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+        }
+
+        .escala-prefix {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 2px;
+        }
+
+        .escala-number {
+            border: none;
+            outline: none;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            background: transparent;
+            width: 100px;
+            text-align: left;
+            min-width: 20px;
+        }
+
+        .escala-number::-webkit-outer-spin-button,
+        .escala-number::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .escala-number[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .field-container {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            background-color: white;
+            transition: border-color 0.3s ease;
+            gap: 10px;
+        }
+
+        .field-container:focus-within {
+            border-color: #4a90e2;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+        }
+
+        .field-label {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .values-input {
+            border: none;
+            outline: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            background: transparent;
+            width: 120px;
+            text-align: left;
+            padding: 8px 0;
+        }
+
+        .values-input::-webkit-outer-spin-button,
+        .values-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .values-input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .values-input::placeholder {
+            color: #999;
+            font-weight: normal;
+        }
+
+        .resultado {
+            margin-top: 20px;
+            padding: 25px;
+            background-color: white;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            min-height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .resultado:empty {
+            background-color: white;
+            color: #6c757d;
+        }
+
+        .resultado:not(:empty) {
+            background-color: white;
+            border-color: #c3e6cb;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                max-width: 95%;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+
+            .form-group {
+                margin-bottom: 25px;
+            }
+            
+            .field-container {
+                flex-direction: row;
+                gap: 12px;
+                align-items: center;
+                padding: 15px;
+            }
+            
+            .field-label {
+                font-size: 22px;
+            }
+            
+            .values-input {
+                width: 85px;
+                font-size: 20px;
+            }
+            
+            .resultado {
+                font-size: 24px;
+                padding: 18px;
+                min-height: 60px;
+                margin-top: 15px;
+            }
+
+            .escala-prefix, .escala-number {
+                font-size: 24px;
+            }
+
+            .escala-input-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Escala 1:X</h1>
+        
+        <div class="form-group">
+            <div class="escala-input-container">
+                <span class="escala-prefix">Escala 1:</span>
+                <input type="number" class="escala-number" id="escala" min="1" max="99" value="50">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="field-container">
+                <span class="field-label">Plano:</span>
+                <input type="number" class="values-input" id="plano" placeholder="0.00" step="0.01" min="0">
+            </div>
+            <div class="resultado" id="resultado-plano"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="field-container">
+                <span class="field-label">Real:</span>
+                <input type="number" class="values-input" id="real" placeholder="0.00" step="0.01" min="0">
+            </div>
+            <div class="resultado" id="resultado-real"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const escalaInput = document.getElementById('escala');
+            const planoInput = document.getElementById('plano');
+            const realInput = document.getElementById('real');
+            const resultadoPlano = document.getElementById('resultado-plano');
+            const resultadoReal = document.getElementById('resultado-real');
+
+            // Validar y corregir el valor de escala
+            function validarEscala() {
+                let valor = parseInt(escalaInput.value);
+                if (isNaN(valor) || valor < 1) {
+                    valor = 1;
+                } else if (valor > 99) {
+                    valor = 99;
+                }
+                escalaInput.value = valor;
+                return valor;
+            }
+
+            // Función para validar valores decimales (máximo 2 decimales)
+            function validarDecimal(input) {
+                let valor = parseFloat(input.value);
+                if (isNaN(valor) || valor < 0) {
+                    return null;
+                }
+                // Redondear a 2 decimales
+                valor = Math.round(valor * 100) / 100;
+                input.value = valor;
+                return valor;
+            }
+
+            // Función para calcular y mostrar resultado del plano
+            function calcularPlano() {
+                const escala = validarEscala();
+                const plano = validarDecimal(planoInput);
+                
+                if (escala && plano !== null && plano > 0) {
+                    const resultado = (plano * escala).toFixed(2);
+                    resultadoPlano.textContent = `Real: ${resultado}`;
+                } else {
+                    resultadoPlano.textContent = '';
+                }
+            }
+
+            // Función para calcular y mostrar resultado del real
+            function calcularReal() {
+                const escala = validarEscala();
+                const real = validarDecimal(realInput);
+                
+                if (escala && real !== null && real > 0) {
+                    const resultado = (real / escala).toFixed(2);
+                    resultadoReal.textContent = `Plano: ${resultado}`;
+                } else {
+                    resultadoReal.textContent = '';
+                }
+            }
+
+            // Event listeners para cálculo en tiempo real
+            escalaInput.addEventListener('input', function() {
+                if (planoInput.value) {
+                    calcularPlano();
+                }
+                if (realInput.value) {
+                    calcularReal();
+                }
+            });
+
+            escalaInput.addEventListener('blur', function() {
+                validarEscala();
+            });
+
+            planoInput.addEventListener('input', function() {
+                calcularPlano();
+            });
+
+            planoInput.addEventListener('blur', function() {
+                if (this.value) validarDecimal(this);
+            });
+
+            realInput.addEventListener('input', function() {
+                calcularReal();
+            });
+
+            realInput.addEventListener('blur', function() {
+                if (this.value) validarDecimal(this);
+            });
+        });
+    </script>
+</body>
+</html>
