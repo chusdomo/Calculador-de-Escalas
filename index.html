@@ -84,6 +84,11 @@
             -moz-appearance: textfield;
         }
 
+        .escala-number::placeholder {
+            color: #999;
+            font-weight: normal;
+        }
+
         .field-container {
             display: flex;
             align-items: center;
@@ -228,7 +233,7 @@
         <div class="form-group">
             <div class="escala-input-container">
                 <span class="escala-prefix">Escala 1:</span>
-                <input type="number" class="escala-number" id="escala" min="1" max="99" value="50">
+                <input type="number" class="escala-number" id="escala" min="1" max="99" placeholder="X">
             </div>
         </div>
 
@@ -283,10 +288,10 @@
 
             // Función para calcular y mostrar resultado del plano
             function calcularPlano() {
-                const escala = validarEscala();
-                const plano = validarDecimal(planoInput);
+                const escala = parseInt(escalaInput.value);
+                const plano = parseFloat(planoInput.value);
                 
-                if (escala && plano !== null && plano > 0) {
+                if (escala && !isNaN(escala) && plano && !isNaN(plano) && plano > 0) {
                     const resultado = (plano * escala).toFixed(2);
                     resultadoPlano.textContent = `Real: ${resultado}`;
                 } else {
@@ -296,10 +301,10 @@
 
             // Función para calcular y mostrar resultado del real
             function calcularReal() {
-                const escala = validarEscala();
-                const real = validarDecimal(realInput);
+                const escala = parseInt(escalaInput.value);
+                const real = parseFloat(realInput.value);
                 
-                if (escala && real !== null && real > 0) {
+                if (escala && !isNaN(escala) && real && !isNaN(real) && real > 0) {
                     const resultado = (real / escala).toFixed(2);
                     resultadoReal.textContent = `Plano: ${resultado}`;
                 } else {
@@ -318,7 +323,9 @@
             });
 
             escalaInput.addEventListener('blur', function() {
-                validarEscala();
+                if (this.value) {
+                    validarEscala();
+                }
             });
 
             planoInput.addEventListener('input', function() {
@@ -335,6 +342,13 @@
 
             realInput.addEventListener('blur', function() {
                 if (this.value) validarDecimal(this);
+            });
+
+            // Seleccionar todo el texto cuando se hace clic en cualquier input
+            [escalaInput, planoInput, realInput].forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.select();
+                });
             });
         });
     </script>
